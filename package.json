@@ -2,10 +2,19 @@
   "name": "typesafe-idb",
   "version": "0.0.1",
   "description": "A type-safe wrapper for IndexedDB for SQL-like features",
-  "main": "index.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "tsc"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sundaram123krishnan/TypeSafe-IDB.git"
+  },
+  "files": [
+    "lib"
+  ],
   "author": "",
   "license": "MIT",
   "type": "module",

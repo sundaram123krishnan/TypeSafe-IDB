@@ -2,10 +2,14 @@
   "name": "typesafe-idb",
   "version": "0.0.1",
   "description": "A type-safe wrapper for IndexedDB for SQL-like features",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
 }

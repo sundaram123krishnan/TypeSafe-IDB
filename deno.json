@@ -1,0 +1,14 @@
+{
+  "tasks": {
+    "dev": "deno run --watch lib/main.ts",
+    "run": "deno run lib/main.ts",
+    "test": "deno test test/*.spec.ts"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1"
+  },
+  "compilerOptions": {
+    "lib": ["deno.window"],
+    "strict": true
+  }
+}

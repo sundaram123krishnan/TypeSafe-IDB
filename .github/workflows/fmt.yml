@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  Run Format Check:
+  Run-Format-Check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

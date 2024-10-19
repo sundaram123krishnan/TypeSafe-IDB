@@ -1,6 +1,7 @@
 # Prisma-IDB
 
-A package that allows you to query IndexedDB with your pre-existing `.prisma` schema files
+A package that allows you to query IndexedDB with your pre-existing `.prisma`
+schema files
 
 ## License
 

@@ -13,7 +13,7 @@ const typeMapping = new Map([
   ["DateTime", "Date"],
 ]);
 
-function convertToInterface(schema: Record<string, any>): string {
+function convertToInterface(schema: IDBSchemaModel): string {
   let result = `import type { DBSchema } from "idb";\n\n`;
   result += `interface MyDB extends DBSchema {\n`;
 
@@ -28,14 +28,15 @@ function convertToInterface(schema: Record<string, any>): string {
     }
     result += `    };\n`;
 
-    if (model.indexes) {
-      result += `    indexes: {\n`;
-      for (const index in model.indexes) {
-        result += `      '${index}': ${model.indexes[index]};\n`;
-      }
-      result += `    };\n`;
-    }
-    result += `  };\n`;
+    // TODO: support indexing
+    // if (model.indexes) {
+    //   result += `    indexes: {\n`;
+    //   for (const index in model.indexes) {
+    //     result += `      '${index}': ${model.indexes[index]};\n`;
+    //   }
+    //   result += `    };\n`;
+    // }
+    // result += `  };\n`;
   }
 
   result += `}\n`;

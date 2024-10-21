@@ -45,7 +45,7 @@ function convertToInterface(schema: IDBSchemaModel): string {
 }
 
 export async function createTIDB(
-  datamodelPath: string
+  datamodelPath: string,
 ): Promise<IDBSchemaModel> {
   const schema: Record<string, { key: string; value: Record<string, string> }> =
     {};

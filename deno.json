@@ -1,5 +1,5 @@
 {
-  "name": "@pidb/pidb",
+  "name": "@p-idb/p-idb-generator",
   "version": "0.0.1",
   "exports": "./lib/main.ts",
   "tasks": {

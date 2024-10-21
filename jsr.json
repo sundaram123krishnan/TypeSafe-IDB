@@ -1,5 +1,5 @@
 {
-  "name": "@tidb/prisma-idb",
+  "name": "@pidb/pidb-generator",
   "version": "0.0.1",
   "exports": "./lib/main.ts"
 }

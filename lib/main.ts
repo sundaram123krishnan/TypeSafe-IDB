@@ -13,22 +13,32 @@ const typeMapping = new Map([
   ["DateTime", "Date"],
 ]);
 
-function convertToTypes(schema: IDBSchemaModel): string {
-  let result = "";
+function convertToInterface(schema: Record<string, any>): string {
+  let result = `import type { DBSchema } from "idb";\n\n`;
+  result += `interface MyDB extends DBSchema {\n`;
 
   for (const modelName in schema) {
     const model = schema[modelName];
-    result += `type ${modelName} = {\n`;
-    result += `  key: ${model.key};\n`;
-    result += `  value: {\n`;
+    result += `  ${modelName.toLowerCase()}: {\n`;
+    result += `    key: ${model.key};\n`;
 
+    result += `    value: {\n`;
     for (const field in model.value) {
-      result += `    ${field}: ${model.value[field]};\n`;
+      result += `      ${field}: ${model.value[field]};\n`;
     }
+    result += `    };\n`;
 
+    if (model.indexes) {
+      result += `    indexes: {\n`;
+      for (const index in model.indexes) {
+        result += `      '${index}': ${model.indexes[index]};\n`;
+      }
+      result += `    };\n`;
+    }
     result += `  };\n`;
-    result += `};\n\n`;
   }
+
+  result += `}\n`;
 
   return result;
 }
@@ -64,7 +74,7 @@ export async function createTIDB(
     schema[model.name] = { key: mappedKeyType, value };
   });
 
-  const tsTypes = convertToTypes(schema);
+  const tsTypes = convertToInterface(schema);
   Deno.writeTextFileSync("lib/idbSchema.d.ts", tsTypes);
   return schema;
 }

@@ -13,6 +13,26 @@ const typeMapping = new Map([
   ["DateTime", "Date"],
 ]);
 
+function convertToTypes(schema: IDBSchemaModel): string {
+  let result = "";
+
+  for (const modelName in schema) {
+    const model = schema[modelName];
+    result += `type ${modelName} = {\n`;
+    result += `  key: ${model.key};\n`;
+    result += `  value: {\n`;
+
+    for (const field in model.value) {
+      result += `    ${field}: ${model.value[field]};\n`;
+    }
+
+    result += `  };\n`;
+    result += `};\n\n`;
+  }
+
+  return result;
+}
+
 export async function createTIDB(
   datamodelPath: string
 ): Promise<IDBSchemaModel> {
@@ -44,6 +64,8 @@ export async function createTIDB(
     schema[model.name] = { key: mappedKeyType, value };
   });
 
+  const tsTypes = convertToTypes(schema);
+  Deno.writeTextFileSync("lib/idbSchema.d.ts", tsTypes);
   return schema;
 }
 

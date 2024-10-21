@@ -1,11 +1,9 @@
 import prismaInternals from "@prisma/internals";
 
-type MappedDataModelEntry = {
-  modelName: string;
-  fieldName: string;
-  fieldType: string;
-  mappedFieldType: string;
-};
+type IDBSchemaModel = Record<
+  string,
+  { key: string; value: Record<string, string> }
+>;
 
 const typeMapping = new Map([
   ["String", "string"],
@@ -17,33 +15,36 @@ const typeMapping = new Map([
 
 export async function createTIDB(
   datamodelPath: string
-): Promise<MappedDataModelEntry[]> {
+): Promise<IDBSchemaModel> {
+  const schema: Record<string, { key: string; value: Record<string, string> }> =
+    {};
   const dmmf = await prismaInternals.getDMMF({ datamodelPath });
 
-  const mappedDataModel: MappedDataModelEntry[] = dmmf.datamodel.models.flatMap(
-    (model) =>
-      model.fields.map((field) => {
-        const mappedDataModelEntry: MappedDataModelEntry = {
-          modelName: model.name,
-          fieldName: field.name,
-          fieldType: field.type,
-          mappedFieldType: "modelRelation",
-        };
+  dmmf.datamodel.models.forEach((model) => {
+    const key = model.fields.find(({ isId }) => isId);
+    if (!key) throw new Error(`No id field found for model: ${model.name}`);
 
-        if (field.kind === "object") {
-          return mappedDataModelEntry;
-        }
+    const mappedKeyType = typeMapping.get(key.type);
+    if (!mappedKeyType) {
+      throw new Error(`Prisma type ${key.type} is not yet supported`);
+    }
 
-        const mappedType = typeMapping.get(field.type);
-        if (!mappedType) {
-          throw new Error(`Prisma type ${field.type} is not yet supported`);
-        }
+    const value: Record<string, string> = {};
+    model.fields.forEach((field) => {
+      if (field.kind === "object") return;
 
-        mappedDataModelEntry.mappedFieldType = mappedType;
-        return mappedDataModelEntry;
-      })
-  );
-  return mappedDataModel;
+      const mappedType = typeMapping.get(field.type);
+      if (!mappedType) {
+        throw new Error(`Prisma type ${field.type} is not yet supported`);
+      }
+
+      value[field.name] = mappedType;
+    });
+
+    schema[model.name] = { key: mappedKeyType, value };
+  });
+
+  return schema;
 }
 
-console.table(await createTIDB("./lib/prisma/schema.prisma"));
+console.log(await createTIDB("./lib/prisma/schema.prisma"));

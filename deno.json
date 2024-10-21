@@ -1,4 +1,7 @@
 {
+  "name": "@pidb/pidb",
+  "version": "0.0.1",
+  "exports": "./lib/main.ts",
   "tasks": {
     "dev": "deno run --watch lib/main.ts",
     "run": "deno run lib/main.ts",
